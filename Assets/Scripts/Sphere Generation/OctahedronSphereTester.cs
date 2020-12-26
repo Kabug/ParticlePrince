@@ -15,6 +15,7 @@ public class OctahedronSphereTester : MonoBehaviour
 
     private void Awake()
     {
+
         GetComponent<MeshFilter>().mesh = OctahedronSphereCreator.Create(subdivisions, radius);
         GetComponent<Renderer>().material = m_TestMaterial;
     }
