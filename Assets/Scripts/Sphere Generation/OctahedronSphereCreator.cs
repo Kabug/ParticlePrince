@@ -117,6 +117,9 @@ public static class OctahedronSphereCreator
             float progress = (float)i / resolution;
             Vector3 from, to;
             vertices[v++] = to = Vector3.Lerp(Vector3.up, Vector3.forward, progress);
+            //float test = Mathf.PerlinNoise(to.x, to.z) * 2f;
+            //to.y = to.y + test;
+            //Debug.Log(to);
             for (int d = 0; d < 4; d++)
             {
                 from = to;
@@ -166,7 +169,7 @@ public static class OctahedronSphereCreator
     }
 
     //Creates a Mesh given Subdivisons and Radius for Octahedron
-    public static Mesh Create (int subdivisions, float radius)
+    public static Mesh Create (int subdivisions, float radius, float seed)
     {
         if (subdivisions < 0)
         {
@@ -237,6 +240,59 @@ public static class OctahedronSphereCreator
             }
         }
 
+        for(int i = 0; i < vertices.Length; i++)
+        {
+            //Debug.Log(vertices[i]);
+            //float perlinZ = Mathf.PerlinNoise(vertices[i].x, vertices[i].y) * seed;
+            //float perlinX = Mathf.PerlinNoise(vertices[i].y, vertices[i].z) * seed;
+            //float perlinY = Mathf.PerlinNoise(vertices[i].z, vertices[i].x) * seed; ;
+            //vertices[i].z += perlinZ;
+            //vertices[i].x += perlinX;
+            //vertices[i].y += perlinY;
+
+            float noise = Perlin.Noise(vertices[i].x * seed, vertices[i].y * seed, vertices[i].z * seed);
+            //Debug.Log(vertices[i] + " " + noise);
+
+            if(noise > 0.12f){
+                noise = 0.12f;
+            }
+            if(noise < -0.12f){
+                noise = -0.12f;
+            }
+
+            if(Mathf.Abs(vertices[i].x) >= Mathf.Abs(vertices[i].y) && Mathf.Abs(vertices[i].x) >= Mathf.Abs(vertices[i].z))
+            {
+                if(Mathf.Abs(noise) > 0.1){
+                    if(noise > 0 && vertices[i].x > 0 || noise < 0 && vertices[i].x < 0){
+                        vertices[i].x += noise;
+                    }
+                }
+            }
+            if (Mathf.Abs(vertices[i].y) >= Mathf.Abs(vertices[i].x) && Mathf.Abs(vertices[i].y) >= Mathf.Abs(vertices[i].z))
+            {
+                if(Mathf.Abs(noise) > 0.1){
+                    if(noise > 0 && vertices[i].y > 0 || noise < 0 && vertices[i].y < 0){
+                        vertices[i].y += noise;
+                    }
+                }
+            }
+            if (Mathf.Abs(vertices[i].z) >= Mathf.Abs(vertices[i].x) && Mathf.Abs(vertices[i].z) >= Mathf.Abs(vertices[i].y))
+            {
+                if(Mathf.Abs(noise) > 0.1){
+                    if(noise > 0 && vertices[i].z > 0 || noise < 0 && vertices[i].z < 0){
+                        vertices[i].z += noise;
+                    }
+
+                }
+            }
+
+            //Debug.Log(vertices[i] + " " + noise);
+            //Need to find the highest values then apply the noise to it
+            //vertices[i].y += noise;
+            //Debug.Log(test2);
+        }
+        Debug.Log("=========");
+
         Mesh mesh = new Mesh();
         mesh.name = "Octahedron Sphere";
         mesh.vertices = vertices;
@@ -245,6 +301,4 @@ public static class OctahedronSphereCreator
         mesh.triangles = triangles;
         return mesh;
     }
-
-
 }
