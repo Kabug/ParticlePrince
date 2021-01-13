@@ -9,35 +9,38 @@ public class OctahedronSphereTester : MonoBehaviour
     public int subdivisions = 0;
     private int lastSubdivisions = 0;
 
-    public float seed = 0.0f;
-    private float lastSeed = 0.2f;
+    public float frequency = 0.0f;
+    private float lastfrequency = 0.2f;
 
     public float radius = 1f;
     private float lastRadius = 1f;
 
     public Material m_TestMaterial;
 
-    public float rotationSpeed = 15f;
+    [Range(-30, 30)]
+    public float rotationSpeed = 1f;
 
     private Mesh mesh;
 
+    public Gradient gradient;
+
     private void Awake()
     {
-        GetComponent<MeshFilter>().mesh = OctahedronSphereCreator.Create(subdivisions, radius, seed);
-        GetComponent<Renderer>().material = m_TestMaterial;
+        GetComponent<MeshFilter>().mesh = OctahedronSphereCreator.Create(subdivisions, radius, frequency, gradient);
+        //GetComponent<Renderer>().material = m_TestMaterial;
     }
 
     void Update()
     {
-        if(lastSeed != seed || lastSubdivisions != subdivisions || lastRadius != radius)
+        if(lastfrequency != frequency || lastSubdivisions != subdivisions || lastRadius != radius)
         {
-            lastSeed = seed;
+            lastfrequency = frequency;
             lastSubdivisions = subdivisions;
             lastRadius = radius;
-            mesh = OctahedronSphereCreator.Create(subdivisions, radius, seed);
+            mesh = OctahedronSphereCreator.Create(subdivisions, radius, frequency, gradient);
             GetComponent<MeshFilter>().mesh = mesh;
         }
-        //transfrom.rotate (0, rotationSpeed * Time.deltaTime, 0);
+        transform.Rotate(Vector3.up * 0.1f * rotationSpeed);
     }
 
     public void changeSubdivisions(float newSubdivision)

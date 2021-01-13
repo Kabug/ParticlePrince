@@ -169,7 +169,7 @@ public static class OctahedronSphereCreator
     }
 
     //Creates a Mesh given Subdivisons and Radius for Octahedron
-    public static Mesh Create (int subdivisions, float radius, float seed)
+    public static Mesh Create (int subdivisions, float radius, float seed, Gradient gradient)
     {
         if (subdivisions < 0)
         {
@@ -224,8 +224,10 @@ public static class OctahedronSphereCreator
             normals[i] = vertices[i] = vertices[i].normalized;
         }
 
-        Vector2[] uv = new Vector2[vertices.Length];
-        CreateUV(vertices, uv);
+        //Vector2[] uv = new Vector2[vertices.Length];
+        //CreateUV(vertices, uv);
+
+        Color[] colors = new Color[vertices.Length];
 
         Vector4[] tangents = new Vector4[vertices.Length];
 
@@ -262,30 +264,32 @@ public static class OctahedronSphereCreator
 
             if(Mathf.Abs(vertices[i].x) >= Mathf.Abs(vertices[i].y) && Mathf.Abs(vertices[i].x) >= Mathf.Abs(vertices[i].z))
             {
-                if(Mathf.Abs(noise) > 0.1){
+                if(Mathf.Abs(noise) > 0){
                     if(noise > 0 && vertices[i].x > 0 || noise < 0 && vertices[i].x < 0){
                         vertices[i].x += noise;
+                        colors[i] = gradient.Evaluate(vertices[i].x);
                     }
                 }
             }
             if (Mathf.Abs(vertices[i].y) >= Mathf.Abs(vertices[i].x) && Mathf.Abs(vertices[i].y) >= Mathf.Abs(vertices[i].z))
             {
-                if(Mathf.Abs(noise) > 0.1){
+                if(Mathf.Abs(noise) > 0){
                     if(noise > 0 && vertices[i].y > 0 || noise < 0 && vertices[i].y < 0){
                         vertices[i].y += noise;
+                        colors[i] = gradient.Evaluate(vertices[i].y);
                     }
                 }
             }
             if (Mathf.Abs(vertices[i].z) >= Mathf.Abs(vertices[i].x) && Mathf.Abs(vertices[i].z) >= Mathf.Abs(vertices[i].y))
             {
-                if(Mathf.Abs(noise) > 0.1){
+                if(Mathf.Abs(noise) > 0){
                     if(noise > 0 && vertices[i].z > 0 || noise < 0 && vertices[i].z < 0){
                         vertices[i].z += noise;
+                        colors[i] = gradient.Evaluate(vertices[i].z);
                     }
-
                 }
             }
-
+            
             //Debug.Log(vertices[i] + " " + noise);
             //Need to find the highest values then apply the noise to it
             //vertices[i].y += noise;
@@ -297,7 +301,8 @@ public static class OctahedronSphereCreator
         mesh.name = "Octahedron Sphere";
         mesh.vertices = vertices;
         mesh.normals = normals;
-        mesh.uv = uv;
+        //mesh.uv = uv;
+        mesh.colors = colors;
         mesh.triangles = triangles;
         return mesh;
     }
