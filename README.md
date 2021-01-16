@@ -10,4 +10,4 @@ Early Forms:<br />
 ![](https://i.imgur.com/2LVsTer.gif)
 
 Heightmap Shaders:<br />
-![](https://i.imgur.com/rILyExu.gif)
+![](https://i.imgur.com/VHVVvaD.gif)
