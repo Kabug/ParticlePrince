@@ -291,7 +291,7 @@ public static class OctahedronSphereCreator
             //vertices[i].y += noise;
             //Debug.Log(test2);
         }
-        Debug.Log("=========");
+        //Debug.Log("=========");
 
         Mesh mesh = new Mesh();
         mesh.name = "Octahedron Sphere";
