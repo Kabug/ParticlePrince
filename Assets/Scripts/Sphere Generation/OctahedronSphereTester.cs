@@ -30,7 +30,7 @@ public class OctahedronSphereTester : MonoBehaviour
         GetComponent<MeshFilter>().mesh = OctahedronSphereCreator.Create(subdivisions, radius, seed);
         GetComponent<Renderer>().material = m_TestMaterial;
         texture = new Texture2D(textureResolution, 1);
-        m_TestMaterial.SetVector("elevationMinMax", new Vector4(radius, radius + 1.12f));
+        m_TestMaterial.SetVector("_elevationMinMax", new Vector4(radius, radius + 1.12f));
     }
 
     void Update()
@@ -45,7 +45,7 @@ public class OctahedronSphereTester : MonoBehaviour
             Vector3[] vertices = mesh.vertices;
             //Debug.Log(Vector3.Distance(transform.position, vertices[0]));
             updateColours();
-            m_TestMaterial.SetVector("elevationMinMax", new Vector4(radius, radius + 1.12f));
+            m_TestMaterial.SetVector("_elevationMinMax", new Vector4(radius, radius + 0.12f));
         }
         transform.Rotate(Vector3.up * 0.1f * rotationSpeed);
     }
