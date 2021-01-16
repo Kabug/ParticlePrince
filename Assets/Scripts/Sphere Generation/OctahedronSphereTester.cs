@@ -21,10 +21,16 @@ public class OctahedronSphereTester : MonoBehaviour
 
     private Mesh mesh;
 
+    public Gradient gradient;
+    Texture2D texture;
+    const int textureResolution = 50;
+
     private void Awake()
     {
         GetComponent<MeshFilter>().mesh = OctahedronSphereCreator.Create(subdivisions, radius, seed);
         GetComponent<Renderer>().material = m_TestMaterial;
+        texture = new Texture2D(textureResolution, 1);
+        m_TestMaterial.SetVector("_elevationMinMax", new Vector4(radius, radius + 1.12f));
     }
 
     void Update()
@@ -36,12 +42,29 @@ public class OctahedronSphereTester : MonoBehaviour
             lastRadius = radius;
             mesh = OctahedronSphereCreator.Create(subdivisions, radius, seed);
             GetComponent<MeshFilter>().mesh = mesh;
+            Vector3[] vertices = mesh.vertices;
+            //Debug.Log(Vector3.Distance(transform.position, vertices[0]));
+            updateColours();
+            m_TestMaterial.SetVector("_elevationMinMax", new Vector4(radius, radius + 0.12f));
         }
-        //transfrom.rotate (0, rotationSpeed * Time.deltaTime, 0);
+        transform.Rotate(Vector3.up * 0.1f * rotationSpeed);
     }
 
     public void changeSubdivisions(float newSubdivision)
     {
         subdivisions = (int)newSubdivision;
+    }
+
+    public void updateColours()
+    {
+        Color[] colours = new Color[textureResolution];
+        for(int i = 0; i<textureResolution; i++)
+        {
+            colours[i] = gradient.Evaluate(i / (textureResolution - 1f));
+        }
+
+        texture.SetPixels(colours);
+        texture.Apply();
+        m_TestMaterial.SetTexture("_texture", texture);
     }
 }
