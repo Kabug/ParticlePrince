@@ -1,9 +1,11 @@
 ﻿//Source: https://www.binpress.com/creating-octahedron-sphere-unity/
 
 using UnityEngine;
+//using System.Linq;
 
 public static class OctahedronSphereCreator
 {
+
     private static Vector3[] directions = {
             Vector3.left,
             Vector3.back,
@@ -169,7 +171,7 @@ public static class OctahedronSphereCreator
     }
 
     //Creates a Mesh given Subdivisons and Radius for Octahedron
-    public static Mesh Create (int subdivisions, float radius, float seed)
+    public static Mesh Create (int subdivisions, float radius, float strength, float roughness, Vector3 center, float numLayers, float persistence, float baseRoughness, float minValue)
     {
         if (subdivisions < 0)
         {
@@ -232,6 +234,7 @@ public static class OctahedronSphereCreator
         CreateTangents(vertices, tangents);
 
         //Adjust sizes if radius is larger than 1
+        /*
         if (radius != 1f)
         {
             for (int i = 0; i < vertices.Length; i++)
@@ -239,8 +242,9 @@ public static class OctahedronSphereCreator
                 vertices[i] *= radius;
             }
         }
-
-        for(int i = 0; i < vertices.Length; i++)
+        
+        //vertices = vertices.OrderBy(v => v.x).ToArray<Vector3>();
+        for (int i = 0; i < vertices.Length; i++)
         {
             //Debug.Log(vertices[i]);
             //float perlinZ = Mathf.PerlinNoise(vertices[i].x, vertices[i].y) * seed;
@@ -250,40 +254,64 @@ public static class OctahedronSphereCreator
             //vertices[i].x += perlinX;
             //vertices[i].y += perlinY;
 
-            float noise = Perlin.Noise(vertices[i].x * seed, vertices[i].y * seed, vertices[i].z * seed);
-            //Debug.Log(vertices[i] + " " + noise);
 
-            if(noise > 0.12f){
-                noise = 0.12f;
-            }
-            if(noise < -0.12f){
-                noise = -0.12f;
-            }
+            float randomNum = Random.Range(1, 1.05f);
+            randomNum = 1;
+            //float randomNum2 = Random.Range(-1, 1f);
+            float noise = Perlin.Noise(vertices[i].x * seed * randomNum, vertices[i].y * seed * randomNum, vertices[i].z * seed * randomNum);
 
-            if(Mathf.Abs(vertices[i].x) >= Mathf.Abs(vertices[i].y) && Mathf.Abs(vertices[i].x) >= Mathf.Abs(vertices[i].z))
+            //add random number in range to make it more detailed
+            //normalise values by dividing noise by max height
+
+
+
+            //if (noise > 0.12f){
+            //    noise = 0.12f;
+            //}
+            //if(noise < -0.12f){
+            //    noise = -0.12f;
+            //}
+            
+            if (radius >= 1)
             {
-                if(Mathf.Abs(noise) > 0.1){
+                noise = noise * radius / (radius + radius);
+            }
+            else
+            {
+                noise = noise * radius / (1 + radius);
+            }
+            //if(noise * (noise + randomNum) > radius)
+            //{
+            //    noise = noise * (noise + randomNum);
+            //}
+            
+
+
+
+            if (Mathf.Abs(vertices[i].x) >= Mathf.Abs(vertices[i].y) && Mathf.Abs(vertices[i].x) >= Mathf.Abs(vertices[i].z))
+            {
+                //if(Mathf.Abs(noise) > 0.1){
                     if(noise > 0 && vertices[i].x > 0 || noise < 0 && vertices[i].x < 0){
                         vertices[i].x += noise;
                     }
-                }
+                //}
             }
             if (Mathf.Abs(vertices[i].y) >= Mathf.Abs(vertices[i].x) && Mathf.Abs(vertices[i].y) >= Mathf.Abs(vertices[i].z))
             {
-                if(Mathf.Abs(noise) > 0.1){
+                //if(Mathf.Abs(noise) > 0.1){
                     if(noise > 0 && vertices[i].y > 0 || noise < 0 && vertices[i].y < 0){
                         vertices[i].y += noise;
                     }
-                }
+                //}
             }
             if (Mathf.Abs(vertices[i].z) >= Mathf.Abs(vertices[i].x) && Mathf.Abs(vertices[i].z) >= Mathf.Abs(vertices[i].y))
             {
-                if(Mathf.Abs(noise) > 0.1){
+                //if(Mathf.Abs(noise) > 0.1){
                     if(noise > 0 && vertices[i].z > 0 || noise < 0 && vertices[i].z < 0){
                         vertices[i].z += noise;
                     }
 
-                }
+                //}
             }
 
             //Debug.Log(vertices[i] + " " + noise);
@@ -292,6 +320,27 @@ public static class OctahedronSphereCreator
             //Debug.Log(test2);
         }
         //Debug.Log("=========");
+        */
+        Noise noise = new Noise();
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            //float elevation = ((noise.Evaluate(vertices[i] * roughness + center) + 1) * 0.5f) * strength;
+            float noiseValue = 0;
+            float frequency = baseRoughness;
+            float amplitude = 1;
+
+            for (int l = 0; l < numLayers; l++)
+            {
+                float v = noise.Evaluate(vertices[i] * frequency + center);
+                noiseValue += (v + 1) * 0.5f * amplitude;
+                frequency *= roughness;
+                amplitude *= persistence;
+            }
+            noiseValue = Mathf.Max(0, noiseValue - minValue);
+            noiseValue *= strength;
+
+            vertices[i] = vertices[i] * radius * (noiseValue + 1); 
+        }
 
         Mesh mesh = new Mesh();
         mesh.name = "Octahedron Sphere";

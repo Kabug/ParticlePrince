@@ -25,9 +25,25 @@ public class OctahedronSphereTester : MonoBehaviour
     Texture2D texture;
     const int textureResolution = 50;
 
+    public float strength = 1;
+    private float lastStrength = 1;
+    public float roughness = 1;
+    private float lastRoughness = 1;
+    public Vector3 center;
+    private Vector3 lastCenter;
+    [Range(1,8)]
+    public float numLayers = 1;
+    private float lastNumLayers = 1;
+    public float persistence = 0.5f;
+    private float lastPersistence = 0.5f;
+    public float baseRoughness = 2;
+    private float lastBaseRoughness = 2;
+    public float minValue;
+    private float lastMinValue;
+
     private void Awake()
     {
-        GetComponent<MeshFilter>().mesh = OctahedronSphereCreator.Create(subdivisions, radius, seed);
+        GetComponent<MeshFilter>().mesh = OctahedronSphereCreator.Create(subdivisions, radius, strength, roughness, center, numLayers, persistence, baseRoughness, minValue);
         GetComponent<Renderer>().material = m_TestMaterial;
         texture = new Texture2D(textureResolution, 1);
         m_TestMaterial.SetVector("_elevationMinMax", new Vector4(radius, radius + 1.12f));
@@ -35,17 +51,24 @@ public class OctahedronSphereTester : MonoBehaviour
 
     void Update()
     {
-        if(lastSeed != seed || lastSubdivisions != subdivisions || lastRadius != radius)
+        if(lastSubdivisions != subdivisions || lastRadius != radius || lastStrength != strength || lastRadius != roughness || lastCenter != center || lastNumLayers != numLayers || lastPersistence != persistence || lastBaseRoughness != baseRoughness || minValue != lastMinValue)
         {
-            lastSeed = seed;
             lastSubdivisions = subdivisions;
             lastRadius = radius;
-            mesh = OctahedronSphereCreator.Create(subdivisions, radius, seed);
+            lastStrength = strength;
+            lastRoughness = roughness;
+            lastCenter = center;
+            lastNumLayers = numLayers;
+            lastPersistence = persistence;
+            lastBaseRoughness = baseRoughness;
+            lastMinValue = minValue;
+
+            mesh = OctahedronSphereCreator.Create(subdivisions, radius, strength, roughness, center, numLayers, persistence, baseRoughness, minValue);
             GetComponent<MeshFilter>().mesh = mesh;
             Vector3[] vertices = mesh.vertices;
             //Debug.Log(Vector3.Distance(transform.position, vertices[0]));
             updateColours();
-            m_TestMaterial.SetVector("_elevationMinMax", new Vector4(radius, radius + 0.12f));
+            m_TestMaterial.SetVector("_elevationMinMax", new Vector4(radius, radius + (0.9f * radius / (radius + radius))));
         }
         transform.Rotate(Vector3.up * 0.1f * rotationSpeed);
     }
