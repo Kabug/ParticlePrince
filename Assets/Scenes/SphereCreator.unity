@@ -463,17 +463,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc3b052cfc56f9244982c1a7ec517be4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  subdivisions: 0
-  seed: 0
+  subdivisions: 6
   radius: 1
   m_TestMaterial: {fileID: 2100000, guid: 7ac5585e1d162b64f9dd7bf6f14d1c18, type: 2}
-  rotationSpeed: 15
+  rotationSpeed: 5
   gradient:
     serializedVersion: 2
     key0: {r: 0.07075471, g: 0.7014627, b: 1, a: 1}
     key1: {r: 0, g: 1, b: 0.3174076, a: 1}
-    key2: {r: 0.38679248, g: 0.19321252, b: 0, a: 0}
-    key3: {r: 1, g: 1, b: 1, a: 0}
+    key2: {r: 0.38679248, g: 0.19321252, b: 0, a: 1}
+    key3: {r: 1, g: 1, b: 1, a: 1}
     key4: {r: 1, g: 1, b: 1, a: 0}
     key5: {r: 1, g: 1, b: 1, a: 0}
     key6: {r: 0, g: 0, b: 0, a: 0}
@@ -488,22 +487,23 @@ MonoBehaviour:
     ctime7: 0
     atime0: 0
     atime1: 65535
-    atime2: 0
-    atime3: 0
+    atime2: 65535
+    atime3: 65535
     atime4: 0
     atime5: 0
     atime6: 0
     atime7: 0
-    m_Mode: 0
+    m_Mode: 1
     m_NumColorKeys: 4
     m_NumAlphaKeys: 2
-  strength: 1
-  roughness: 1
-  center: {x: 0, y: 0, z: 0}
-  numLayers: 1
-  persistence: 0.5
-  baseRoughness: 2
-  minValue: 0
+  noiseSettings:
+    strength: 0.1
+    roughness: 1.9
+    center: {x: 0, y: 0, z: 0}
+    numLayers: 5
+    persistence: 0.5
+    baseRoughness: 0.6
+    minValue: 1
 --- !u!33 &583348491
 MeshFilter:
   m_ObjectHideFlags: 0

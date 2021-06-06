@@ -26,7 +26,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats: []
     m_Colors:
-    - _elevationMinMax: {r: -0.72, g: -0.27000004, b: 0, a: 0}
+    - _elevationMinMax: {r: 1, g: 1.45, b: 0, a: 0}
 --- !u!114 &9201522015238675254
 MonoBehaviour:
   m_ObjectHideFlags: 11

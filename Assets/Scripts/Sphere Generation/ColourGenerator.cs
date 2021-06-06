@@ -8,6 +8,6 @@ public class ColourGenerator : MonoBehaviour
 
     public void updateElevation()
     {
-        settings.m_TestMaterial.SetVector("elevationMinMax", new Vector4(1, 1.12f));
+        settings.m_TerrainMaterial.SetVector("elevationMinMax", new Vector4(1, 1.12f));
     }
 }

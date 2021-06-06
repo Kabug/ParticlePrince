@@ -170,20 +170,20 @@ public static class OctahedronSphereCreator
         uv[vertices.Length - 1].x = uv[3].x = 0.875f;
     }
 
-    //Creates a Mesh given Subdivisons and Radius for Octahedron
-    public static Mesh Create (int subdivisions, float radius, float strength, float roughness, Vector3 center, float numLayers, float persistence, float baseRoughness, float minValue)
+    //Creates a Mesh given Subdivisons and Radius and noise settings for Octahedron
+    public static Mesh Create (ObjectSettings objectSettings, NoiseSettings noiseSettings, SimpleNoiseFilter noiseFilter)
     {
-        if (subdivisions < 0)
+        if (objectSettings.subdivisions < 0)
         {
-            subdivisions = 0;
+            objectSettings.subdivisions = 0;
             Debug.LogWarning("Octahedron Sphere subdivisions increased to minimum, which is 0.");
         }
         //Can't go above 7 subdivisions because unity only uses 16 bit integers.
         //This maxes out at 32,767.
         //7 subdivisions will have 65,799 vertices which is way too high so we have to account.
-        else if (subdivisions > 6)
+        else if (objectSettings.subdivisions > 6)
         {
-            subdivisions = 6;
+            objectSettings.subdivisions = 6;
             Debug.LogWarning("Octahedron Sphere subdivisions decreased to maximum, which is 6.");
         }
 
@@ -212,9 +212,9 @@ public static class OctahedronSphereCreator
         //    11, 4, 7
         //};
         //Bit shifting! Did this in the assembly lab.
-        int resolution = 1 << subdivisions;
+        int resolution = 1 << objectSettings.subdivisions;
         Vector3[] vertices = new Vector3[(resolution + 1) * (resolution + 1) * 4 - (resolution * 2 - 1) * 3];
-        int[] triangles = new int[(1 << (subdivisions * 2 + 3)) * 3];
+        int[] triangles = new int[(1 << (objectSettings.subdivisions * 2 + 3)) * 3];
         CreateOctahedron(vertices, triangles, resolution);
 
         //Normalize vectors
@@ -321,6 +321,9 @@ public static class OctahedronSphereCreator
         }
         //Debug.Log("=========");
         */
+
+        //Simple version
+        /*
         Noise noise = new Noise();
         for (int i = 0; i < vertices.Length; i++)
         {
@@ -341,6 +344,39 @@ public static class OctahedronSphereCreator
 
             vertices[i] = vertices[i] * radius * (noiseValue + 1); 
         }
+        */
+
+        //Noise noise = new Noise();
+        //for (int i = 0; i < vertices.Length; i++)
+        //{
+        //    //float elevation = ((noise.Evaluate(vertices[i] * roughness + center) + 1) * 0.5f) * strength;
+        //    float noiseValue = 0;
+        //    float frequency = baseRoughness;
+        //    float amplitude = 1;
+        //    float weight = 1;
+
+        //    for (int l = 0; l < numLayers; l++)
+        //    {
+        //        float v = 1 - Mathf.Abs(noise.Evaluate(vertices[i] * frequency + center));
+        //        v *= v;
+        //        v *= weight;
+        //        weight = v;
+        //        noiseValue += v * amplitude;
+        //        frequency *= roughness;
+        //        amplitude *= persistence;
+        //    }
+        //    noiseValue = Mathf.Max(0, noiseValue - minValue);
+        //    noiseValue *= strength;
+
+        //    vertices[i] = vertices[i] * radius * (noiseValue + 1);
+        //}
+
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            float noiseValue = noiseFilter.Evaluate(vertices[i]);
+            vertices[i] = vertices[i] * objectSettings.radius * (noiseValue + 1);
+        }
+
 
         Mesh mesh = new Mesh();
         mesh.name = "Octahedron Sphere";
