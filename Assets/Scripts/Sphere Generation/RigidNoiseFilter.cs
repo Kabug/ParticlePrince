@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RigidNoiseFilter
+public class RigidNoiseFilter : INoiseFilter
 {
     NoiseSettings settings;
     Noise noise = new Noise();

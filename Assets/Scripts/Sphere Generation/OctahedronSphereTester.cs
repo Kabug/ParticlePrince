@@ -18,34 +18,50 @@ public class OctahedronSphereTester : MonoBehaviour
     Texture2D texture;
     const int textureResolution = 50;
 
-    public NoiseSettings noiseSettings;
-    private SimpleNoiseFilter noiseFilter;
-
-    private string lastNoiseSettings;
+    private INoiseFilter[] noiseFilters;
 
     private void Awake()
     {
-        noiseFilter = new SimpleNoiseFilter(noiseSettings);
-        lastNoiseSettings = JsonUtility.ToJson(noiseSettings);
+        noiseFilters = new SimpleNoiseFilter[objectSettings.noiseLayers.Length];
+        for (int i = 0; i < noiseFilters.Length; i++)
+        {
+            noiseFilters[i] = new SimpleNoiseFilter(objectSettings.noiseLayers[i].noiseSettings);
+        }
+
         lastObjectSettings = JsonUtility.ToJson(objectSettings);
 
-        GetComponent<MeshFilter>().mesh = OctahedronSphereCreator.Create(objectSettings, noiseSettings, noiseFilter);
+        GetComponent<MeshFilter>().mesh = OctahedronSphereCreator.Create(objectSettings, noiseFilters); ;
         GetComponent<Renderer>().material = m_TerrainMaterial;
         texture = new Texture2D(textureResolution, 1);
         updateColours();
-        m_TerrainMaterial.SetVector("_elevationMinMax", new Vector4(objectSettings.radius, objectSettings.radius + 1.12f));
+        m_TerrainMaterial.SetVector("_elevationMinMax", new Vector4(objectSettings.radius, objectSettings.radius + (0.9f * objectSettings.radius / (objectSettings.radius + objectSettings.radius))));
+
+        noiseFilters = new INoiseFilter[objectSettings.noiseLayers.Length];
+        for (int i = 0; i < noiseFilters.Length; i++)
+        {
+            noiseFilters[i] = NoiseFilterFactory.CreateNoiseFilter(objectSettings.noiseLayers[i].noiseSettings);
+        }
+        lastObjectSettings = JsonUtility.ToJson(objectSettings);
+
+        mesh = OctahedronSphereCreator.Create(objectSettings, noiseFilters);
+        GetComponent<MeshFilter>().mesh = mesh;
+        updateColours();
+        m_TerrainMaterial.SetVector("_elevationMinMax", new Vector4(objectSettings.radius, objectSettings.radius + (0.9f * objectSettings.radius / (objectSettings.radius + objectSettings.radius))));
     }
 
     void Update()
     {
-        if (lastObjectSettings != JsonUtility.ToJson(objectSettings) || lastNoiseSettings != JsonUtility.ToJson(noiseSettings))
+        if (lastObjectSettings != JsonUtility.ToJson(objectSettings))
         {
-            lastNoiseSettings = JsonUtility.ToJson(noiseSettings);
+            noiseFilters = new INoiseFilter[objectSettings.noiseLayers.Length];
+            for (int i = 0; i < noiseFilters.Length; i++)
+            {
+                noiseFilters[i] = NoiseFilterFactory.CreateNoiseFilter(objectSettings.noiseLayers[i].noiseSettings);
+            }
             lastObjectSettings = JsonUtility.ToJson(objectSettings);
 
-            mesh = OctahedronSphereCreator.Create(objectSettings, noiseSettings, noiseFilter);
+            mesh = OctahedronSphereCreator.Create(objectSettings, noiseFilters);
             GetComponent<MeshFilter>().mesh = mesh;
-            Vector3[] vertices = mesh.vertices;
             updateColours();
             m_TerrainMaterial.SetVector("_elevationMinMax", new Vector4(objectSettings.radius, objectSettings.radius + (0.9f * objectSettings.radius / (objectSettings.radius + objectSettings.radius))));
         }

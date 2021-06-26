@@ -5,6 +5,9 @@ using UnityEngine;
 [System.Serializable]
 public class NoiseSettings
 {
+    public enum FilterType { Simple, Rigid };
+    public FilterType filterType;
+
     public float strength = 0.1f;
     public float roughness = 1.9f;
     public Vector3 center;

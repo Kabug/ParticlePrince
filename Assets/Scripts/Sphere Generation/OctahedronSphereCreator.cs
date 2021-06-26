@@ -171,7 +171,7 @@ public static class OctahedronSphereCreator
     }
 
     //Creates a Mesh given Subdivisons and Radius and noise settings for Octahedron
-    public static Mesh Create (ObjectSettings objectSettings, NoiseSettings noiseSettings, SimpleNoiseFilter noiseFilter)
+    public static Mesh Create (ObjectSettings objectSettings, INoiseFilter[] noiseFilters)
     {
         if (objectSettings.subdivisions < 0)
         {
@@ -371,10 +371,31 @@ public static class OctahedronSphereCreator
         //    vertices[i] = vertices[i] * radius * (noiseValue + 1);
         //}
 
-        for (int i = 0; i < vertices.Length; i++)
+
+        for (int v = 0; v < vertices.Length; v++)
         {
-            float noiseValue = noiseFilter.Evaluate(vertices[i]);
-            vertices[i] = vertices[i] * objectSettings.radius * (noiseValue + 1);
+            float noiseValue = 0;
+            float firstLayerValue = 0;
+
+            if (noiseFilters.Length > 0)
+            {
+                firstLayerValue = noiseFilters[0].Evaluate(vertices[v]);
+                if (objectSettings.noiseLayers[0].enabled)
+                {
+                    noiseValue = firstLayerValue;
+                }
+            }
+
+            for (int f = 1; f < noiseFilters.Length; f++)
+            {
+                if (objectSettings.noiseLayers[f].enabled)
+                {
+                    float mask = objectSettings.noiseLayers[f].useMask ? firstLayerValue : 1; 
+                    noiseValue += noiseFilters[f].Evaluate(vertices[v]) * mask;
+                }
+            }
+            vertices[v] = vertices[v] * objectSettings.radius * (noiseValue + 1);
+
         }
 
 
