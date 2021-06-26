@@ -13,4 +13,4 @@ V1 Heightmap w/ Shaders:<br />
 ![](https://i.imgur.com/VHVVvaD.gif)
 
 V2 Heightmap w/ Shaders: <br />
-![](https://i.imgur.com/aVMZDaM.gif)
+![](https://user-images.githubusercontent.com/22303067/123505388-a7a0fb80-d613-11eb-844d-c6520fb5b855.gif)
