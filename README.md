@@ -6,8 +6,11 @@ A project to demonstrate hydraulic erosion on terrestrial planets in real time
 
 # Heightmaps
 
-Early Forms:<br />
+V1 Early Forms:<br />
 ![](https://i.imgur.com/2LVsTer.gif)
 
-Heightmap Shaders:<br />
+V1 Heightmap w/ Shaders:<br />
 ![](https://i.imgur.com/VHVVvaD.gif)
+
+V2 Heightmap w/ Shaders: <br />
+![](https://i.imgur.com/aVMZDaM.gif)
