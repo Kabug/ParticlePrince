@@ -47,6 +47,8 @@ public class OctahedronSphereTester : MonoBehaviour
         GetComponent<MeshFilter>().mesh = mesh;
         updateColours();
         m_TerrainMaterial.SetVector("_elevationMinMax", new Vector4(objectSettings.radius, objectSettings.radius + (0.9f * objectSettings.radius / (objectSettings.radius + objectSettings.radius))));
+
+        GetComponent<MeshCollider>().sharedMesh = mesh;
     }
 
     void Update()
