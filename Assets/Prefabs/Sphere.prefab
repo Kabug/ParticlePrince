@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 09ce96caf6d8cfc42888496f017091ae, type: 2}
+  - {fileID: 2100000, guid: be86e66c503e89f4dbd875eac0b9b0bd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -124,3 +124,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 618083144884826355}
+  sedimentRemoveChance: 50
+  minImpulse: 2
+  malleability: 0.05
+  radius: 0.1
+  planet: {fileID: 0}
