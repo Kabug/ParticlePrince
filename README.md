@@ -1120,14 +1120,14 @@ _https://youtu.be/_zYkqud4o2I_
 
 #### Kanem – Vipulan
 
-_https://youtu.be/3A0UcqgsqS_
+_https://youtu.be/3A0UcqgsqS0
 
 
 Page **18** of **46**
 
 #### Aunty Earth – Terry
 
-_https://youtu.be/MA_4Gu1iCK_
+_https://youtu.be/MA_4Gu1iCK4
 
 ## 6. Methodology
 
